@@ -128,18 +128,21 @@ def build(right_flange, left_flange, bdy, path='valve.step'):
 def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
                    , gap_left=350, gap_right=310, shield_ofst=10, hole_ofst=10
                    , thck=30):
-    valve_d = valve_c / pi
+    valve_d = round(valve_c / pi,3)
     center = valve_l - (2 * thck)
     center_hole = (center - valve_d) / 2
-    print(center_hole)
 
-    p1 = (0, -392.611)
-    p2 = (127.389, -520.00)
-    p3 = (0, -647.389)
+    p1_left = (0, -center_hole)
+    p2_left = ((valve_d/2), -(center/2))
+    p3_left = (0, -(center_hole+valve_d))
+
+    p1_right = (flange_c, -center_hole)
+    p2_right = (flange_c-(valve_d/2), -(center/2))
+    p3_right = (flange_c, -(center_hole+valve_d))
 
     # Create the arc by passing the three points to the arc() method
-    arc = cq.Edge.makeThreePointArc(p1, p2, p3).close()
-
+    arc1 = cq.Edge.makeThreePointArc(p1_left, p2_left, p3_left)
+    arc2 = cq.Edge.makeThreePointArc(p1_right, p2_right, p3_right)
     start_point = (0.0, 0.0)
     jack = (cq.Workplane("XY")
             .moveTo(0.0)
@@ -156,9 +159,11 @@ def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
             .lineTo(flange_c, -center)  # SECTION 3
             .lineTo(flange_c, 0)  # SECTION 2
             .close()
-            ).add(arc)
+            ).add(arc1).add(arc2)
 
     cq.exporters.exportDXF(jack, 'sheet.dxf')
+    return {"p1_left": p1_left, "p2_left": p2_left, "p3_left": p3_left,
+            "p1_right": p1_right, "p2_right": p2_right, "p3_right": p3_right}
 
 
 def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap_right, actuator_gap, thck, bolts_num=8,
