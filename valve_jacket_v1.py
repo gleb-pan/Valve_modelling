@@ -2,7 +2,7 @@
 
 # Jacket thickness - 30mm
 
-import math
+from math import sin, cos, radians, pi
 import cadquery as cq
 
 def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_side=False, bolts_num=8, bolts_d=5):
@@ -12,9 +12,9 @@ def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_sid
     '''
     # try:
     # GET DIAMETER
-    flange_d = flange_c / math.pi
-    pipe_d = pipe_c / math.pi
-    shield_d = shield_c / math.pi
+    flange_d = flange_c / pi
+    pipe_d = pipe_c / pi
+    shield_d = shield_c / pi
 
     # ERROR CATCHING
     if pipe_d >= flange_d:
@@ -34,8 +34,8 @@ def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_sid
     ofst = pipe_d + ((flange_d - pipe_d) / 2)
     for i in range(bolts_num):
         angle = i * (360 / bolts_num)
-        x = ofst * math.cos(math.radians(angle))
-        y = ofst * math.sin(math.radians(angle))
+        x = ofst * cos(radians(angle))
+        y = ofst * sin(radians(angle))
         front_face = cq.Workplane("XZ").workplane(offset=thck).moveTo(x, y)
         sketch = front_face.circle(bolts_d).extrude(-thck * 2)
         result = result.cut(sketch)
@@ -64,9 +64,9 @@ def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_sid
 
 def body(*, valve_l=1100, flange_c=2820, pipe_c=1950, valve_c=800, thck=20):
     # Get diameter
-    flange_d = flange_c / math.pi
-    pipe_d = pipe_c / math.pi
-    valve_d = valve_c / math.pi
+    flange_d = flange_c / pi
+    pipe_d = pipe_c / pi
+    valve_d = valve_c / pi
 
     if valve_d >= valve_l:
         raise ValueError('"valve_c" cannot be greater than or equal to "valve_l"')
@@ -214,3 +214,4 @@ if __name__ == '__main__':
                   # , bolts_num= # amount of holes in a flange, by default 8 (OPTIONAL)
                   # , bolts_d= # hole diameter, by default 5 (OPTIONAL)
                   )
+    get_jacket_dxf()
