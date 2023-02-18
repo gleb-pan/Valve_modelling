@@ -68,7 +68,6 @@ def body(*, valve_l=1100, flange_c=2820, pipe_c=1950, valve_c=800, thck=20, act_
     flange_d = flange_c / pi
     pipe_d = pipe_c / pi
     valve_d = valve_c / pi
-    print(valve_d)
 
     if valve_d >= valve_l:
         raise ValueError('"valve_c" cannot be greater than or equal to "valve_l"')
