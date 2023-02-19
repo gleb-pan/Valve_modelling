@@ -152,7 +152,7 @@ def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
     center_hole = (center - valve_d) / 2
 
     # VARIABLES FOR ARCS
-    # Firts point of the ThreePointArc is defined by the last drawn line
+    # First point of the ThreePointArc is defined by the last drawn line
     arc1_p2 = (valve_d / 2, -(center_hole + (valve_d / 2)))
     arc1_p3 = (0, -(center_hole + valve_d))
     arc2_p2 = ((flange_c - (valve_d / 2)), -(center / 2))
@@ -232,10 +232,10 @@ if __name__ == '__main__':
     bolts_d = 10  # hole diameter, by default 5 (OPTIONAL)
 
     # VARIABLES FOR 2D SKETCH ONLY
-    X_offset = 100
-    Y_ofst = 100
-    hole_offset = 20
-    path_sketch = 'H:\\Desktop\\sheet.dxf'
+    X_offset = 0 # Offset for increasing the width. Zero by default. (OPTIONAL)
+    Y_ofst = 0 # Offset for increasing the length (Gaps btw shield and flange are increased). Zero by default. (OPTIONAL)
+    hole_offset = 0 # Offset for increasing the hole diameter. Zero by default. (OPTIONAL)
+    path_sketch = 'H:\\Desktop\\sheet.dxf' # (2D sketch) path where the file will be saved. Default: 'sheet.step'
 
     # GETTING A 3D MODEL OF VALVE (output is .step file)
     get_valve_stp(flange_c=flange_c
