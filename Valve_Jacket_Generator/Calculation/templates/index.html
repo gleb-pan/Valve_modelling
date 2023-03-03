@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jacket Generator</title>
+    <link rel="stylesheet" href="../static/css/index_master.css">
+</head>
+<body>
+<form method="post" action="{% url 'generate_files' %}">
+    <h1>Enter the values:</h1>
+    <label id="1" for="flange_c">Flange circumference</label>
+    <input type="number" name="flange_c" required>
+
+    <label id="2" for="flange_thck" >Flange thickness</label>
+    <input type="number" name="flange_thck" required>
+
+    <label id="3" for="shield_c">Shield circumference</label>
+    <input type="number" name="shield_c" required>
+
+    <label id="4" for="valve_c">Valve circumference(top)</label>
+    <input type="number" name="valve_c" required>
+
+    <label id="5" for="valve_l">Valve length</label>
+    <input type="number" name="valve_l" required>
+
+    <label id="6" for="gap_left">Left gap</label>
+    <input type="number" name="gap_left" required>
+
+    <label id="7" for="gap_right">Right gap</label>
+    <input type="number" name="gap_right" required>
+
+    <label id="8" for="pipe_c">Pipe circumference</label>
+    <input type="number" name="pipe_c" required>
+
+    <button type="submit">Generate files</button>
+</form>
+
+</body>
+</html>

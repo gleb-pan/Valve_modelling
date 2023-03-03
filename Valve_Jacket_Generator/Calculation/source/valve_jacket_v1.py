@@ -1,7 +1,10 @@
+# pip install --pre git+https://github.com/CadQuery/cadquery.git
+
+# Jacket thickness - 30mm
+
 import cadquery as cq
-from math import pi
-from django.shortcuts import render
-from django.http import HttpResponse
+from math import sin, cos, radians, pi
+
 
 def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_side=False, bolts_num=8, bolts_d=5):
     """
@@ -213,28 +216,54 @@ def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap
     build(r_flange, l_flange, bdy, path_step)
 
 
-def generate_files(request):
-    if request.method == 'POST':
-        flange_c = request.POST.get('flange_c')
-        flange_thck = request.POST.get('flange_thck')
-        shield_c = request.POST.get('shield_c')
-        pipe_c = request.POST.get('pipe_c')
-        valve_c = request.POST.get('valve_c')
-        valve_l = request.POST.get('valve_l')
-        gap_left = request.POST.get('gap_left')
-        gap_right = request.POST.get('gap_right')
+if __name__ == '__main__':
+    # VARIABLES FOR BOTH 3D MODEL AND JACKET
+    flange_c = 500  # circumference of the flange (REQUIRED)
+    valve_l = 280  # length of the valve (REQUIRED)
+    shield_c = 460  # circumference of the shield (REQUIRED)
+    pipe_c = 240  # circumference of the pipe (REQUIRED)
+    valve_c = 500  # circumference of the valve (top side) (REQUIRED)
+    gap_left = 80  # gap btw flange and shield (left) (REQUIRED)
+    gap_right = 50  # gap btw flange and shield (right) (REQUIRED)
+    thck = 20  # thickness of the flange (REQUIRED)
+    actuator_gap = 200  # gap from the edge of actuator and outter flange (OPTIONAL)
+    path_step = 'H:\\Desktop\\valve2.step'  # (3D model) path where the file will be saved. Default: 'valve.step'
+    # bolts_num= # amount of holes in a flange, by default 8 (OPTIONAL)
+    bolts_d = 10  # hole diameter, by default 5 (OPTIONAL)
 
-        # Generate the files using the form data
-        get_valve_stp(flange_c=flange_c
-                      , valve_l=valve_l
-                      , shield_c=shield_c
-                      , pipe_c=pipe_c
-                      , valve_c=valve_c
-                      , gap_left=gap_left
-                      , gap_right=gap_right
-                      , thck=flange_thck
-                      , path_step='temp\\valve_3D.step'
-                      )
-        return HttpResponse('Files generated successfully!')
-    else:
-        return render(request, 'generate_files.html')
+    # VARIABLES FOR 2D SKETCH ONLY
+    X_offset = 0 # Offset for increasing the width. Zero by default. (OPTIONAL)
+    Y_ofst = 0 # Offset for increasing the length (Gaps btw shield and flange are increased). Zero by default. (OPTIONAL)
+    hole_offset = 0 # Offset for increasing the hole diameter. Zero by default. (OPTIONAL)
+    path_sketch = 'H:\\Desktop\\sheet.dxf' # (2D sketch) path where the file will be saved. Default: 'sheet.step'
+
+    # GETTING A 3D MODEL OF VALVE (output is .step file)
+    get_valve_stp(flange_c=flange_c
+                  , valve_l=valve_l
+                  , shield_c=shield_c
+                  , pipe_c=pipe_c
+                  , valve_c=valve_c
+                  , gap_left=gap_left
+                  , gap_right=gap_right
+                  , thck=thck
+                  , actuator_gap=actuator_gap
+                  # , bolts_num=bolts_num
+                  , bolts_d=bolts_d
+                  , path_step=path_step
+                  )
+
+    # GETTING A 2D SKETCH OF THE JACKET FOR A VALVE (output is .dxf file)
+    get_jacket_dxf(flange_c=flange_c
+                   , valve_l=valve_l
+                   , shield_c=shield_c
+                   , valve_c=valve_c
+                   , gap_left=gap_left
+                   , gap_right=gap_right
+                   , thck=thck
+                   , X_offset=X_offset
+                   , Y_ofst=Y_ofst
+                   , hole_offset=hole_offset
+                   , path_sketch=path_sketch
+                   )
+
+    print('Done!')

@@ -1,0 +1,16 @@
+body{
+    font-family: Helvetica;
+    background: #a5a5a5;
+}
+
+button{
+    font-size: 20px;
+}
+
+/*input{*/
+/*    ;*/
+/*}*/
+
+input, label{
+    display: block;
+}
