@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="../static/css/index_master.css">
 </head>
 <body>
-<form method="post" action="{% url 'generate_files' %}">
+<form method="post" action="{% url 'gen_file' %}">
     <h1>Enter the values:</h1>
+    {% csrf_token %}
     <label id="1" for="flange_c">Flange circumference</label>
     <input type="number" name="flange_c" required>
 

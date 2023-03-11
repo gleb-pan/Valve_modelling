@@ -1,7 +1,13 @@
+import io
 import cadquery as cq
-from math import pi
+from math import pi, cos, sin, radians
+from django.http import FileResponse
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template.loader import get_template
+
+def index(request):
+    return render(request, 'index.html')
 
 def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_side=False, bolts_num=8, bolts_d=5):
     """
@@ -131,10 +137,10 @@ def build(right_flange, left_flange, bdy, path_step='valve.step'):
 
 
 def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
-                   , gap_left=350, gap_right=310, thck=30, path_sketch='sheet.dxf'
+                   , gap_left=350, gap_right=310, thck=30, path_sketch='C:\\Users\\pangl\\OneDrivesheet.dxf'
                    , X_offset=50, Y_ofst=400, hole_offset=200):
-    valve_d = round(valve_c / pi, 3)
-    center = valve_l - (2 * thck)  # THE LENGTH OF THE CENTER SIDE (BODY OF VALVE)
+    valve_d = round((valve_c / pi), 3)
+    center =(valve_l - (2 * thck))  # THE LENGTH OF THE CENTER SIDE (BODY OF VALVE)
 
     # OFFSETS
     valve_d += hole_offset  # Increasing the hole
@@ -181,6 +187,7 @@ def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
 
 def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap_right, actuator_gap, thck, bolts_num=8,
                   bolts_d=5, actuator_type='electric', path_step='valve.step'):
+
     r_flange = flanges(flange_c=flange_c
                        , pipe_c=pipe_c
                        , gap_left=gap_left
@@ -213,28 +220,25 @@ def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap
     build(r_flange, l_flange, bdy, path_step)
 
 
-def generate_files(request):
+def gen_file(request):
     if request.method == 'POST':
-        flange_c = request.POST.get('flange_c')
-        flange_thck = request.POST.get('flange_thck')
-        shield_c = request.POST.get('shield_c')
-        pipe_c = request.POST.get('pipe_c')
-        valve_c = request.POST.get('valve_c')
-        valve_l = request.POST.get('valve_l')
-        gap_left = request.POST.get('gap_left')
-        gap_right = request.POST.get('gap_right')
+        flange_c = request.POST['flange_c']
+        flange_thck = request.POST['flange_thck']
+        shield_c = request.POST['shield_c']
+        valve_c = request.POST['valve_c']
+        valve_l = request.POST['valve_l']
+        gap_left = request.POST['gap_left']
+        gap_right = request.POST['gap_right']
+        pipe_c = request.POST['pipe_c']
+        print(f'HEY {flange_c}')
 
-        # Generate the files using the form data
-        get_valve_stp(flange_c=flange_c
-                      , valve_l=valve_l
-                      , shield_c=shield_c
-                      , pipe_c=pipe_c
-                      , valve_c=valve_c
-                      , gap_left=gap_left
-                      , gap_right=gap_right
-                      , thck=flange_thck
-                      , path_step='temp\\valve_3D.step'
-                      )
-        return HttpResponse('Files generated successfully!')
-    else:
-        return render(request, 'generate_files.html')
+        get_jacket_dxf(
+            flange_c=flange_c,
+            shield_c=shield_c,
+            valve_c=valve_c,
+            valve_l=valve_l,
+            gap_left=gap_left,
+            gap_right=gap_right,
+        )
+
+        return render(request, 'index.html')
