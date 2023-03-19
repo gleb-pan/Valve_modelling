@@ -4,7 +4,8 @@
 
 import cadquery as cq
 from math import sin, cos, radians, pi
-
+from zipfile import ZipFile
+from os import remove
 
 def flanges(*, flange_c, pipe_c, gap_left, gap_right, shield_c, thck=5, left_side=False, bolts_num=8, bolts_d=5):
     """
@@ -179,7 +180,8 @@ def get_jacket_dxf(*, valve_l=1100, flange_c=2820, valve_c=800, shield_c=2750
             .close()
             )
 
-    cq.exporters.exportDXF(jack, path_sketch)
+    return cq.exporters.exportDXF(jack, path_sketch)
+
 
 
 def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap_right, actuator_gap, thck, bolts_num=8,
@@ -214,6 +216,22 @@ def get_valve_stp(*, flange_c, pipe_c, shield_c, valve_l, valve_c, gap_left, gap
                )
 
     build(r_flange, l_flange, bdy, path_step)
+
+def get_zip(*,path_1, path_2, zip_path):
+
+    # Creating a ZipFile object
+    zipObj = ZipFile(zip_path, 'w')
+
+    # Writing files to zipfile
+    zipObj.write(path_1)
+    zipObj.write(path_2)
+
+
+    zipObj.close()
+
+    # Removing the files that were saved to the zipfile
+    remove(path_1)
+    remove(path_2)
 
 
 if __name__ == '__main__':
@@ -266,4 +284,5 @@ if __name__ == '__main__':
                    , path_sketch=path_sketch
                    )
 
-    print('Done!')
+    get_zip(path_1=path_step, path_2=path_sketch, zip_path='H:\\Desktop\\files.zip')
+    #print('Done!')
