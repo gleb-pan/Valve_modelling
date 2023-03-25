@@ -9,29 +9,38 @@
 <form method="post" action="{% url 'gen_file' %}">
     <h1>Enter the values:</h1>
     {% csrf_token %}
-    <label id="1" for="flange_c">Flange circumference</label>
+    <label id="1" for="flange_c">Flange circumference:</label>
     <input type="number" name="flange_c" required>
 
-    <label id="2" for="flange_thck" >Flange thickness</label>
+    <label id="2" for="flange_thck" >Flange thickness:</label>
     <input type="number" name="flange_thck" required>
 
-    <label id="3" for="shield_c">Shield circumference</label>
+    <label id="3" for="shield_c">Shield circumference:</label>
     <input type="number" name="shield_c" required>
 
-    <label id="4" for="valve_c">Valve circumference(top)</label>
+    <label id="4" for="valve_c">Valve circumference(top):</label>
     <input type="number" name="valve_c" required>
 
-    <label id="5" for="valve_l">Valve length</label>
+    <label id="5" for="valve_l">Valve length:</label>
     <input type="number" name="valve_l" required>
 
-    <label id="6" for="gap_left">Left gap</label>
+    <label id="6" for="gap_left">Left gap:</label>
     <input type="number" name="gap_left" required>
 
-    <label id="7" for="gap_right">Right gap</label>
+    <label id="7" for="gap_right">Right gap:</label>
     <input type="number" name="gap_right" required>
 
-    <label id="8" for="pipe_c">Pipe circumference</label>
+    <label id="8" for="pipe_c">Pipe circumference:</label>
     <input type="number" name="pipe_c" required>
+
+    <label id="9" for="X_offset">Offset (X axis):</label>
+    <input type="number" name="X_offset" required>
+
+    <label id="10" for="Y_offset">Offset (Y axis):</label>
+    <input type="number" name="Y_offset" required>
+
+    <label id="11" for="hole_offset">Hole offset:</label>
+    <input type="number" name="hole_offset" required>
 
     <button type="submit">Generate files</button>
 </form>

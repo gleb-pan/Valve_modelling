@@ -12,3 +12,6 @@ class ValveParams(models.Model):
     valve_l = models.CharField(max_length=10)
     gap_left = models.CharField(max_length=10)
     gap_right = models.CharField(max_length=10)
+    X_offset = models.CharField(max_length=10)
+    Y_offset = models.CharField(max_length=10)
+    hole_offset = models.CharField(max_length=10)
