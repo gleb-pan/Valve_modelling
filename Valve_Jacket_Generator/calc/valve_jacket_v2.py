@@ -1,7 +1,7 @@
 import cadquery as cq
 from math import sin, cos, radians, pi
 from zipfile import ZipFile
-from os import remove
+from os import remove, path
 
 
 class ValveJacket:
@@ -26,6 +26,7 @@ class ValveJacket:
         self.hole_offset = hole_offset  # Offset for increasing the hole diameter. Zero by default. (OPTIONAL)
 
         # Paths (have to be configured for django)
+        self.check = lambda p: path.exists(p)
         self.step_path = step_path
         self.dxf_path = dxf_path
         self.zip_path = zip_path
