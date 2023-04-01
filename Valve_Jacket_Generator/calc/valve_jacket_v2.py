@@ -1,16 +1,26 @@
+import os
+import datetime as dt
 import cadquery as cq
 from math import sin, cos, radians, pi
 from zipfile import ZipFile
-from os import remove, path
 
 
 class ValveJacket:
-    def __init__(self, *, flange_c: float, pipe_c: float
-                 , gap_left: float, gap_right: float, shield_c: float
-                 , valve_c: float, valve_l: float, thck: float = 5
-                 , bolts_num: int = 8, bolts_d: float = 5
-                 , x_offset: float, y_offset: float, hole_offset: float
-                 , step_path: str, dxf_path: str, zip_path):
+    def __init__(self, *, flange_c: float
+                 , pipe_c: float
+                 , gap_left: float
+                 , gap_right: float
+                 , shield_c: float
+                 , valve_c: float
+                 , valve_l: float
+                 , thck: float = 20
+                 , bolts_num: int = 8
+                 , bolts_d: float = 5
+                 , x_offset: float = 0
+                 , y_offset: float = 0
+                 , hole_offset: float = 0
+                 , folder_path=os.path.join(os.getcwd(), "temp")  # default path for temporary files
+                 ):
         self.flange_c = flange_c  # circumference of the flange (REQUIRED)
         self.pipe_c = pipe_c  # circumference of the pipe (REQUIRED)
         self.gap_left = gap_left  # gap btw flange and shield (left) (REQUIRED)
@@ -25,13 +35,20 @@ class ValveJacket:
         self.y_offset = y_offset  # Offset for increasing the length. Zero by default. (OPTIONAL)
         self.hole_offset = hole_offset  # Offset for increasing the hole diameter. Zero by default. (OPTIONAL)
 
-        # Paths (have to be configured for django)
-        self.check = lambda p: path.exists(p)
-        self.step_path = step_path
-        self.dxf_path = dxf_path
-        self.zip_path = zip_path
+        # DEFINING THE PATHS
+        timestamp = dt.datetime.now().strftime("%d-%m-%Y_%Hh-%Mm-%Ss")
+        if not os.path.exists(folder_path):
+            os.mkdir(folder_path)
+            print(f"Folder {folder_path} has been created.")
 
-        self.__left_side = False  # Internal variable for flange_c function
+        self.__step_file_name = f"3D-model-{timestamp}.step"
+        self.__step_path = os.path.join(folder_path, self.__step_file_name)
+
+        self.__dxf_file_name = f"Sketch-{timestamp}.dxf"
+        self.__dxf_path = os.path.join(folder_path, self.__dxf_file_name)
+
+        self.__zip_name = f"FRIJ_FILES-{timestamp}.zip"
+        self.__zip_path = os.path.join(folder_path, self.__zip_name)
 
     def __flanges(self, left_side):
         """
@@ -131,7 +148,7 @@ class ValveJacket:
 
         return bdy
 
-    def __build(self, *, right_flange, left_flange, bdy, path_step='valve.step'):
+    def __build(self, *, right_flange, left_flange, bdy, path_step):
         valve = (cq.Assembly()
                  .add(right_flange
                       , loc=cq.Location((0, 0, 0), (0, 1, 0), 0)
@@ -164,7 +181,7 @@ class ValveJacket:
 
         bdy = self.__body()
 
-        self.__build(right_flange=r_flange, left_flange=l_flange, bdy=bdy, path_step=self.step_path)
+        self.__build(right_flange=r_flange, left_flange=l_flange, bdy=bdy, path_step=self.__step_path)
 
     def get_jacket_dxf(self):
         valve_d = round(self.valve_c / pi, 3)
@@ -210,21 +227,19 @@ class ValveJacket:
                 .close()
                 )
 
-        return cq.exporters.exportDXF(jack, self.dxf_path)
+        return cq.exporters.exportDXF(jack, self.__dxf_path)
 
-    def get_zip(self):
-        # Creating a ZipFile object
-        zipObj = ZipFile(self.zip_path, 'w')
+    def get_everything(self):
+        self.get_valve_stp()
+        self.get_jacket_dxf()
 
         # Writing files to zipfile
-        zipObj.write(self.step_path)
-        zipObj.write(self.dxf_path)
-
-        zipObj.close()
+        with ZipFile(self.__zip_path, mode='w') as z:
+            z.write(self.__step_path, arcname=self.__step_file_name)
+            z.write(self.__dxf_path, arcname=self.__dxf_file_name)
 
         # Removing the files that were saved to the zipfile
-        remove(self.step_path)
-        remove(self.dxf_path)
+        os.remove(self.__step_path)
+        os.remove(self.__dxf_path)
 
-
-
+        return self.__zip_path
