@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interactive Popup on Input Field</title>
+	<style>
+		.popup {
+			display: none;
+			position: absolute;
+			background-color: #fff;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0px 0px 5px #ccc;
+			right: 0;
+			top: 0;
+		}
+	</style>
+</head>
+<body>
+	<label for="inputField">Enter Text:</label>
+	<input type="text" id="inputField">
+	<div class="popup" id="popup">
+        <img src="img_1.png">
+        <p>This is an interactive popup!</p>
+    </div>
+
+	<script>
+		// Get the input field and popup elements
+		var inputField = document.getElementById('inputField');
+		var popup = document.getElementById('popup');
+
+		// Show the popup when the input field is clicked
+		inputField.addEventListener('focus', function() {
+			popup.style.display = 'block';
+		});
+
+		// Hide the popup when the user clicks outside of it
+		document.addEventListener('click', function(event) {
+			if (!popup.contains(event.target) && !inputField.contains(event.target)) {
+				popup.style.display = 'none';
+			}
+		});
+	</script>
+</body>
+</html>

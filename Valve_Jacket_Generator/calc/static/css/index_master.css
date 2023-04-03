@@ -1,16 +1,23 @@
 body{
+
     font-family: Helvetica;
-    background: #a5a5a5;
+    background: #3c3d46;
+    font-size: 14px;
+    color: #ededed;
+}
+
+h1{
+    font-size: 30px;
+    font-family: Calibri;
+    color: #696998;
 }
 
 button{
-    font-size: 20px;
+    font-size: 12px;
 }
 
-/*input{*/
-/*    ;*/
-/*}*/
-
-input, label{
+input, label, p{
+    width: 160px;
     display: block;
+    margin: 8px;
 }
