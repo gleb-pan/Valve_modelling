@@ -1,4 +1,5 @@
 import os
+from .models import ValveParams
 from django.shortcuts import render
 from .valve_jacket_v1 import get_jacket_dxf, get_valve_stp, get_zip
 from .valve_jacket_v2 import ValveJacket
@@ -6,16 +7,6 @@ from django.http import Http404, HttpResponse
 
 def start(request):
     return render(request, 'index.html')
-
-# def user_input(request):
-#     if request.method == 'POST':
-#         form = UserInputForm(request)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('gen_file')
-#     else:
-#         form = UserInputForm()
-#     return render(request, 'index.html', {'form': form})
 
 
 def gen_file(request):
@@ -46,6 +37,22 @@ def gen_file(request):
                                    , y_offset=p_y_offset
                                    , hole_offset=p_hole_offset
                                    )
+
+        db_write = ValveParams(date=jacket_files.db_timestamp
+                               , flange_c=p_flange_c
+                               , flange_thck=p_flange_c
+                               , shield_c=p_shield_c
+                               , valve_c=p_valve_c
+                               , valve_l=p_valve_l
+                               , gap_left=p_gap_left
+                               , gap_right=p_gap_right
+                               , pipe_c=p_pipe_c
+                               , X_offset=p_x_offset
+                               , Y_offset=p_y_offset
+                               , hole_offset=p_hole_offset
+                               )
+        db_write.save()
+
         # GENERATING FILES AND PROVIDING THE PATH TO A FILE
         file_path = jacket_files.get_everything()  # method 'get_everything' returns the path
 

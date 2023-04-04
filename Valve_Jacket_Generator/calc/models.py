@@ -4,6 +4,7 @@ from django.db import models
 
 
 class ValveParams(models.Model):
+    date = models.DateTimeField(null=True)
     flange_c = models.CharField(max_length=10)
     flange_thck = models.CharField(max_length=10)
     shield_c = models.CharField(max_length=10)

@@ -33,6 +33,28 @@
     <input type="number" name="hole_offset" required>
     <button type="submit">Generate files</button>
 </form>
+<div class="popup" id="popup">
+    <img src="img_1.png">
+    <p>This is an interactive popup!</p>
+</div>
+
+<script>
+    // Get the input field and popup elements
+    var inputField = document.getElementById('inputField');
+    var popup = document.getElementById('popup');
+
+    // Show the popup when the input field is clicked
+    inputField.addEventListener('focus', function() {
+        popup.style.display = 'block';
+    });
+
+    // Hide the popup when the user clicks outside of it
+    document.addEventListener('click', function(event) {
+        if (!popup.contains(event.target) && !inputField.contains(event.target)) {
+            popup.style.display = 'none';
+        }
+    });
+</script>
 
 </body>
 </html>

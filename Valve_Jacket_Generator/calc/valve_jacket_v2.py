@@ -36,18 +36,20 @@ class ValveJacket:
         self.hole_offset = hole_offset  # Offset for increasing the hole diameter. Zero by default. (OPTIONAL)
 
         # DEFINING THE PATHS
-        timestamp = dt.datetime.now().strftime("%d-%m-%Y_%Hh-%Mm-%Ss")
+        self.db_timestamp = dt.datetime.now()
+        self.timestamp = dt.datetime.now().strftime("%d-%m-%Y_%Hh-%Mm-%Ss")
+
         if not os.path.exists(folder_path):
             os.mkdir(folder_path)
             print(f"Folder {folder_path} has been created.")
 
-        self.__step_file_name = f"3D-model-{timestamp}.step"
+        self.__step_file_name = f"3D-model-{self.timestamp}.step"
         self.__step_path = os.path.join(folder_path, self.__step_file_name)
 
-        self.__dxf_file_name = f"Sketch-{timestamp}.dxf"
+        self.__dxf_file_name = f"Sketch-{self.timestamp}.dxf"
         self.__dxf_path = os.path.join(folder_path, self.__dxf_file_name)
 
-        self.__zip_name = f"FRIJ_FILES-{timestamp}.zip"
+        self.__zip_name = f"FRIJ_FILES-{self.timestamp}.zip"
         self.__zip_path = os.path.join(folder_path, self.__zip_name)
 
     def __flanges(self, left_side):
@@ -232,7 +234,6 @@ class ValveJacket:
     def get_everything(self):
         self.get_valve_stp()
         self.get_jacket_dxf()
-
         # Writing files to zipfile
         with ZipFile(self.__zip_path, mode='w') as z:
             z.write(self.__step_path, arcname=self.__step_file_name)
@@ -243,3 +244,4 @@ class ValveJacket:
         os.remove(self.__dxf_path)
 
         return self.__zip_path
+
