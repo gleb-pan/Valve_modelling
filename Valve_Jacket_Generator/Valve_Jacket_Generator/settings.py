@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'Valve_Jacket_Generator.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'FRIJ_DATA',
     }
 }
 
